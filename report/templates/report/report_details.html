@@ -1,0 +1,47 @@
+{% extends 'report/_base.html' %}
+{% block title %}
+  Report
+{% endblock %}
+{% block content %}
+  <p>
+    <h1>Report {{ report.machine }}</h1><i>Created on : {{ report.date }}</i>
+  </p>
+  <h5>
+    <b>Overall Severity : </b> {{report.overall_severity}}
+  </h5>
+  {% for reading in report.results.all %}
+    <div class="card mb-4">
+      <div class="card-header">
+        {% with point=reading.measurement_point %}
+      <h6>{{ point.name }} ({{ point.standard }})</h6>
+    {% endwith %}
+      </div>
+      <div class="card-body">
+        <table class="table">
+          <thead class="table-info">
+            <tr>
+              <th>Axis</th>
+              <th>Value</th>
+              <th>Severity</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>x-axis</td> <td>{{ reading.x_point }}</td> <td>{{ reading.x_severity }}</td>
+            </tr>
+            <tr>
+              <td>y-axis</td> <td>{{ reading.y_point }}</td> <td>{{ reading.y_severity }}</td>
+            </tr>
+            <tr>
+              <td>z-axis</td> <td>{{ reading.z_point }}</td> <td>{{ reading.z_severity }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  {% endfor %}
+
+  <i class="pb-3">
+    <b>Remarks :</b> {{report.remarks}}
+  </i>
+{% endblock %}

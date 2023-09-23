@@ -1,0 +1,18 @@
+{% extends "report/_base.html" %}
+{% block title %}
+Report
+{% endblock title %}
+{% block content %}
+<h1>
+    Reports
+</h1>
+  <ol>
+    {% for report in reports %}
+      <li>
+        <a href="{% url "report_details" report.pk %}">{{ report }}</a>
+      </li>
+      {% empty %}
+      <i>No posts yet</i>
+    {% endfor %}
+  </ol>
+{% endblock content %}

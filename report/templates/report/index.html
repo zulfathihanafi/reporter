@@ -1,0 +1,16 @@
+{% extends 'report/_base.html' %}
+{% block title %}
+  Machines
+{% endblock %}
+{% block content %}
+<h1>
+    Machines
+</h1>
+  <ol>
+    {% for machine in machines %}
+      <a href="{% url "machine_details" machine.pk %}">{{ machine }}</a>
+      {% empty %}
+      <i>No posts yet</i>
+    {% endfor %}
+  </ol>
+{% endblock %}
