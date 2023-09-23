@@ -1,8 +1,10 @@
+
 {% extends 'report/_base.html' %}
 {% block title %}
   Report
 {% endblock %}
 {% block content %}
+{% load index %}
   <h1>{{ machine }} : New Report</h1>
 
   <form method="post">
@@ -10,32 +12,15 @@
     {{ reading_formset.management_form }}
 
     {% for form in reading_formset %}
-      <p>
-        {% with index=forloop.counter0 %}
-          Measurement Point {{ index }}
-          Name
-        {% endwith %}
-        <p>{{ form }}</p>
-      </p>
+      {% with index=forloop.counter0 %}
+        <div class="card mb-4">
+          <div class="card-header bg-info-subtle"> {{index|add:1}} {{ measurement_points|index:forloop.counter0 }}</div>
+          <div class="card-body">{{ form }}</div>
+        </div>
+      {% endwith %}
     {% endfor %}
-    
-    {{report_form}}
+
+    {{ report_form.as_p }}
     <input type="submit" value="Submit" />
   </form>
-
-  {% comment %} <form method="POST">
-    {% csrf_token %}
-    <ol>
-      {% for point in measurement_points %}
-        <p>
-          <b>{{ point.name }} ( {{ point.standard }} )</b>
-          <p>{{ form }}</p>
-        </p>
-
-        {% empty %}
-        <i>No report yet</i>
-      {% endfor %}
-    </ol>
-    <button class="btn btn-outlined-primary">Save</button>
-  </form> {% endcomment %}
 {% endblock %}
