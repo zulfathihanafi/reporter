@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.core.validators import MinValueValidator 
 
 class Machine(models.Model):
     name = models.CharField(max_length=30)
@@ -24,9 +25,9 @@ class MeasurementPoint(models.Model):
 
 class Reading(models.Model) :  
     measurement_point = models.ForeignKey(MeasurementPoint, on_delete=models.CASCADE)  
-    x_point = models.IntegerField()
-    y_point = models.IntegerField()
-    z_point = models.IntegerField()
+    x_point = models.PositiveIntegerField(validators=[MinValueValidator(0)])
+    y_point = models.PositiveIntegerField(validators=[MinValueValidator(0)])
+    z_point = models.PositiveIntegerField(validators=[MinValueValidator(0)])
     x_severity = models.CharField(max_length=10)
     y_severity = models.CharField(max_length=10)
     z_severity = models.CharField(max_length=10)

@@ -65,12 +65,10 @@ def report_create(request):
     if request.method == 'POST':
         machine_id = request.GET['machine_id']
         measurementPoints = MeasurementPoint.objects.filter(machine = machine_id)
-        print(measurementPoints)
+        print("Reques", request.GET)
         ReadingFormSet = forms.formset_factory(ReadingForm, extra=measurementPoints.count())
         report_form = ReportForm(request.POST)
-        reading_formset = ReadingFormSet(request.POST)
-
-        
+        reading_formset = ReadingFormSet(request.POST)        
 
         if report_form.is_valid() and reading_formset.is_valid():
             # Save the report
@@ -80,9 +78,11 @@ def report_create(request):
             index = 0
             readingsArray = []
             overallSeverityIndex = 0
+            severityLevel = ['Safe','Harm','Danger']
             # Saving readings
             
             for reading_form in reading_formset:
+                
                 currentMeasurementPoint =  MeasurementPoint.objects.get(pk = measurementPoints[index].id)
 
                 reading = Reading()
@@ -94,7 +94,7 @@ def report_create(request):
                 currentThreshold1 = currentMeasurementPoint.standard.threshold_1
                 currentThreshold2 = currentMeasurementPoint.standard.threshold_2
 
-                severityLevel = ['Safe','Harm','Danger']
+                
                 
 
                 def severityComparator(reading):
@@ -123,8 +123,7 @@ def report_create(request):
                 readingsArray.append(reading)
                 index+=1
 
-            # Save report to get ID first     
-            print('Current', severityLevel[overallSeverityIndex])       
+            # Save report to get ID first       
             report = Report()
             report.machine = Machine.objects.get(pk = machine_id)
             report.overall_severity = severityLevel[overallSeverityIndex]
@@ -136,7 +135,7 @@ def report_create(request):
                 report.results.add(data)
             report.save()
 
-            messages.success(request, "Your series had been created")
+            messages.success(request, "Your report had been created")
             #     if reading_form.is_valid():
             #         reading = reading_form.save(commit=False)
             #         reading.report = report
@@ -145,7 +144,9 @@ def report_create(request):
             
             return redirect('report_details', report.id)  # Redirect to a success page
         else :
-            messages.error("Please correct the error below")
+            messages.error(request,"Please enter correct numbers")
+            return redirect(request)
+
     else:
         machine_id = request.GET['machine_id']
         context = {

@@ -12,15 +12,22 @@
       {% csrf_token %}
       {{ reading_formset.management_form }}
   
+      
       {% for form in reading_formset %}
         {% with index=forloop.counter0 %}
           <div class="card mb-4">
             <div class="card-header bg-info-subtle"> {{index|add:1}} {{ measurement_points|index:forloop.counter0 }}</div>
-            <div class="card-body">{{ form }}</div>
+            <div class="card-body">{{ form.as_table }}</div>
           </div>
         {% endwith %}
+        {% empty %}
+        <p>
+          <i style="color: red;">
+            No measurement point. Form can't be submitted.
+          </i>
+        </p>
       {% endfor %}
-  
+      
       {{ report_form.as_p }}
       {% if measurement_points|length == 0 %}
       <button value="submit" class="btn btn-primary" disabled>
