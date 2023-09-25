@@ -79,8 +79,9 @@ def report_create(request):
             # saved_reading_ids = []
             index = 0
             readingsArray = []
-
+            overallSeverityIndex = 0
             # Saving readings
+            
             for reading_form in reading_formset:
                 currentMeasurementPoint =  MeasurementPoint.objects.get(pk = measurementPoints[index].id)
 
@@ -93,31 +94,44 @@ def report_create(request):
                 currentThreshold1 = currentMeasurementPoint.standard.threshold_1
                 currentThreshold2 = currentMeasurementPoint.standard.threshold_2
 
+                severityLevel = ['Safe','Harm','Danger']
+                
+
                 def severityComparator(reading):
+                    toReturnValue = 0
                     if reading < currentThreshold1:
-                        return "Safe"
+                        toReturnValue = 0
                     else :
                         if reading < currentThreshold2:
-                            return 'Harm'
+                            toReturnValue = 1
                         else :
-                            return "Danger"
-                        
-                reading.x_severity = severityComparator(reading_form.cleaned_data['x_point'])
-                reading.y_severity = severityComparator(reading_form.cleaned_data['y_point'])
-                reading.z_severity = severityComparator(reading_form.cleaned_data['z_point'])
+                            toReturnValue = 2
+                    
+                    print(toReturnValue)
+                    return toReturnValue
+                
+                x_severity_value = severityComparator(reading_form.cleaned_data['x_point'])
+                y_severity_value = severityComparator(reading_form.cleaned_data['y_point'])
+                z_severity_value = severityComparator(reading_form.cleaned_data['z_point'])
+                reading.x_severity = severityLevel[x_severity_value]
+                reading.y_severity = severityLevel[y_severity_value]
+                reading.z_severity = severityLevel[z_severity_value]
+
+                overallSeverityIndex = max([overallSeverityIndex, x_severity_value, y_severity_value, z_severity_value])
 
                 reading.save()
                 readingsArray.append(reading)
                 index+=1
 
-            # Save report to get ID first            
+            # Save report to get ID first     
+            print('Current', severityLevel[overallSeverityIndex])       
             report = Report()
             report.machine = Machine.objects.get(pk = machine_id)
-            report.overall_severity = 'Forgot how to calculate'
+            report.overall_severity = severityLevel[overallSeverityIndex]
             report.remarks = report_form.cleaned_data['remarks']
             report.save()
 
-            # Save the results field (many to many)
+            # # Save the results field (many to many)
             for data in readingsArray:
                 report.results.add(data)
             report.save()
