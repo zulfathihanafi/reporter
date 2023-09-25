@@ -22,7 +22,16 @@
       {% endfor %}
   
       {{ report_form.as_p }}
-      <input type="submit" value="Submit" />
+      {% if measurement_points|length == 0 %}
+      <button value="submit" class="btn btn-primary" disabled>
+        Submit
+      </button>
+      {% else %}
+      <button value="submit" class="btn btn-primary">
+        Submit
+      </button>
+      {% endif %}
+      
     </form>
   </div>
 {% endblock %}
