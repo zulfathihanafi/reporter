@@ -23,22 +23,18 @@
         {% empty %}
         <p>
           <i style="color: red;">
-            No measurement point. Form can't be submitted.
+            No measurement point available. Please contact the administrator.
           </i>
         </p>
       {% endfor %}
       
-      {{ report_form.as_p }}
-      {% if measurement_points|length == 0 %}
-      <button value="submit" class="btn btn-primary" disabled>
-        Submit
-      </button>
-      {% else %}
-      <button value="submit" class="btn btn-primary">
-        Submit
-      </button>
-      {% endif %}
       
+      {% if measurement_points|length != 0 %}
+        {{ report_form.as_p }}
+        <button value="submit" class="btn btn-primary">
+          Submit
+        </button>
+      {% endif %}
     </form>
   </div>
 {% endblock %}

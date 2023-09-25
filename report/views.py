@@ -65,7 +65,6 @@ def report_create(request):
     if request.method == 'POST':
         machine_id = request.GET['machine_id']
         measurementPoints = MeasurementPoint.objects.filter(machine = machine_id)
-        print("Reques", request.GET)
         ReadingFormSet = forms.formset_factory(ReadingForm, extra=measurementPoints.count())
         report_form = ReportForm(request.POST)
         reading_formset = ReadingFormSet(request.POST)        
@@ -144,8 +143,8 @@ def report_create(request):
             
             return redirect('report_details', report.id)  # Redirect to a success page
         else :
-            messages.error(request,"Please enter correct numbers")
-            return redirect(request)
+            messages.error(request,"Error : No data to be saved")
+            return redirect(request.get_full_path())
 
     else:
         machine_id = request.GET['machine_id']
