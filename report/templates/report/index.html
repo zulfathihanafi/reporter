@@ -8,7 +8,9 @@
 </h1>
   <ol>
     {% for machine in machines %}
-      <a href="{% url "machine_details" machine.pk %}">{{ machine }}</a>
+      <li>
+        <a href="{% url "machine_details" machine.pk %}">{{ machine }}</a>
+      </li>
       {% empty %}
       <i>No posts yet</i>
     {% endfor %}

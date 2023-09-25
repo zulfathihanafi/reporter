@@ -7,20 +7,22 @@
 {% load index %}
   <h1>{{ machine }} : New Report</h1>
 
-  <form method="post">
-    {% csrf_token %}
-    {{ reading_formset.management_form }}
-
-    {% for form in reading_formset %}
-      {% with index=forloop.counter0 %}
-        <div class="card mb-4">
-          <div class="card-header bg-info-subtle"> {{index|add:1}} {{ measurement_points|index:forloop.counter0 }}</div>
-          <div class="card-body">{{ form }}</div>
-        </div>
-      {% endwith %}
-    {% endfor %}
-
-    {{ report_form.as_p }}
-    <input type="submit" value="Submit" />
-  </form>
+  <div class="container mb-5">
+    <form method="post">
+      {% csrf_token %}
+      {{ reading_formset.management_form }}
+  
+      {% for form in reading_formset %}
+        {% with index=forloop.counter0 %}
+          <div class="card mb-4">
+            <div class="card-header bg-info-subtle"> {{index|add:1}} {{ measurement_points|index:forloop.counter0 }}</div>
+            <div class="card-body">{{ form }}</div>
+          </div>
+        {% endwith %}
+      {% endfor %}
+  
+      {{ report_form.as_p }}
+      <input type="submit" value="Submit" />
+    </form>
+  </div>
 {% endblock %}
